@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<h1>Welcome, <span th:text="${user.name}"></span></h1>
+<p>Your balance: <span th:text="${user.balance}"></span></p>
+
+<!-- Show Transactions only if user.type is not 'organization' -->
+<h2 th:if="${user.type != 'organization'}">Transactions</h2>
+<ul th:if="${user.type != 'organization'}">
+    <li th:each="transaction : ${transactions}">
+        <span th:text="${transaction.timestamp}"></span>:
+        <span th:text="${transaction.type}"></span> -
+        <span th:text="${transaction.amount}"></span>
+        (<span th:text="${transaction.description}"></span>)
+    </li>
+</ul>
+
+<!-- Show Transfer Funds only if user.type is not 'organization' -->
+<h2 th:if="${user.type != 'organization'}">Transfer Funds</h2>
+<form action="/transfer" method="post" th:if="${user.type != 'organization'}">
+    <label for="recipientId">Recipient ID:</label>
+    <input type="text" id="recipientId" name="recipientId">
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" name="amount">
+    <button type="submit">Transfer</button>
+</form>
+
+<!-- Show Pay Bill only if user.type is not 'organization' -->
+<h2 th:if="${user.type != 'organization'}">Pay Bill</h2>
+<form action="/pay-bill" method="post" th:if="${user.type != 'organization'}">
+    <label for="biller">Biller:</label>
+    <select id="biller" name="biller">
+        <option th:each="biller : ${billers}"
+                th:value="${biller.id}"
+                th:text="${biller.name}">
+        </option>
+    </select>
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" name="amount">
+    <button type="submit">Pay</button>
+</form>
+</body>
+</html>
